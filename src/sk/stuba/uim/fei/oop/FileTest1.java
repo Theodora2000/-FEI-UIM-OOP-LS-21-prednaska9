@@ -5,15 +5,19 @@ import java.io.File;
 public class FileTest1 {
 
     public static void main(String args[]){
-        String meno_subru = Zklavesnice.readString("Zadaj meno");
+       File dir = new File("C:\\Users\\WIN10\\Desktop\\FEI\\4.semeter\\OOP\\9.prednaska\\-FEI-UIM-OOP-LS-21-prednaska9\\src\\sk\\stuba\\uim\\fei\\oop");
+       String[] list = dir.list();
+       for(int i=0;i<list.length;i++){
+           System.out.println(list[i]);
+       }
+        System.out.println("----------");
 
-        File file = new File(meno_subru);
-
-        if(file.exists() && !file.isDirectory()){
-            System.out.println("Subor " + file.getName() +" bol najdeni");
-            System.out.println("Cela cesta " + file.getAbsolutePath());
-        }else {
-            System.out.println("Nenasiel som");
+        for(int i=0;i<list.length;i++){
+            if(list[i].endsWith(".java")) {
+                File tempor = new File(dir, list[i]);
+                long length = tempor.length();
+                System.out.println(list[i] + " [" + length +"]");
+            }
         }
     }
 }
