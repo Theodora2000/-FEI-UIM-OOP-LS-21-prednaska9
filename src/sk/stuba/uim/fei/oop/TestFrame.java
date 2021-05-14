@@ -1,77 +1,92 @@
 package sk.stuba.uim.fei.oop;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-public class TestFrame extends Frame implements ActionListener {
-    Panel button_panel;
+public class TestFrame extends Frame implements ItemListener {
 
-    Button crosshair_c;
-    Button wait_c;
-    Button default_c;
-    Button text_c;
-    Button hand_c;
+    Panel font_panel;
+    Choice font_name;
+    Choice font_type;
+    Choice font_size;
+    String[] font;
+    String[] types={"Plain", "Bold", "Italic", "Bold&Italic"};
+    String[] size = {"10","12", "14", "16", "18", "20"};
 
-    Cursor panel_c;
-    Cursor frame_c;
+    String font_name_selected;
+    int font_type_selected;
+    int font_size_selected;
 
-    public TestFrame (){
-        super("Cursor Frame");
+    public TestFrame(){
+        super("Font Test");
         setLayout(new BorderLayout());
-        setSize(700,400);
-        button_panel = new Panel();
-        crosshair_c = new Button("CROSSHAIR_CURSOR");
-        wait_c = new Button("WAIT_CURSOR");
-        default_c = new Button("DEFAULT_CURSOR");
-        text_c = new Button("TEXT_CURSOR");
-        hand_c = new Button("HAND_CURSOR");
+        setSize(500,400);
 
-        crosshair_c.addActionListener(this);
-        wait_c.addActionListener(this);
-        default_c.addActionListener(this);
-        text_c.addActionListener(this);
-        hand_c.addActionListener(this);
+        font = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        font_panel = new Panel();
+        font_name = new Choice();
+        font_type = new Choice();
+        font_size = new Choice();
 
-        button_panel.add(crosshair_c);
-        button_panel.add(wait_c);
-        button_panel.add(default_c);
-        button_panel.add(text_c);
-        button_panel.add(hand_c);
+        font_name.addItemListener(this);
+        font_size.addItemListener(this);
+        font_type.addItemListener(this);
 
-        panel_c = new Cursor(Cursor.MOVE_CURSOR);
-        frame_c = new Cursor(Cursor.WAIT_CURSOR);
+        for(int i=0;i<size.length;i++){
+            font_size.add(size[i]);
+        }
 
+        for(int i=0;i<types.length;i++){
+            font_type.add(types[i]);
+        }
 
-        button_panel.setCursor(panel_c);
-        this.setCursor(frame_c);
+        for(int i=0;i<size.length;i++){
+            font_name.add(font[i]);
+        }
 
-        add(BorderLayout.NORTH, button_panel);
+        font_name.select(0);
+        font_name_selected = font_name.getSelectedItem();
+
+        font_type.select(0);
+        font_type_selected = font_type.getSelectedIndex();
+
+        font_size.select(0);
+        font_size_selected = Integer.parseInt(font_size.getSelectedItem());
+
+        font_panel.add(font_name);
+        font_panel.add(font_type);
+        font_panel.add(font_size);
+
+        add(BorderLayout.NORTH, font_panel);
         setVisible(true);
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource()== crosshair_c){
-            frame_c = new Cursor(Cursor.CROSSHAIR_CURSOR);
-            this.setCursor(frame_c);
+
+
+    public void itemStateChanged(ItemEvent e){
+        if(e.getSource() == font_name){
+            font_name_selected = font_name.getSelectedItem();
         }
-        if(e.getSource()== wait_c){
-            frame_c = new Cursor(Cursor.WAIT_CURSOR);
-            this.setCursor(frame_c);
+        if(e.getSource() == font_type){
+            font_type_selected = font_type.getSelectedIndex();
         }
-        if(e.getSource()== default_c){
-            frame_c = new Cursor(Cursor.DEFAULT_CURSOR);
-            this.setCursor(frame_c);
+        if(e.getSource() == font_size){
+            font_size_selected = Integer.parseInt(font_size.getSelectedItem());
         }
-        if(e.getSource()== text_c){
-            frame_c = new Cursor(Cursor.TEXT_CURSOR);
-            this.setCursor(frame_c);
-        }
-        if(e.getSource()== hand_c){
-            frame_c = new Cursor(Cursor.HAND_CURSOR);
-            this.setCursor(frame_c);
-        }
+        repaint();
+    }
+
+    public void paint(Graphics g){
+        int x = 200;
+        int y = 200;
+
+        Font font = new Font(font_name_selected, font_type_selected, font_size_selected);
+        g.setFont(font);
+        g.drawString(font_name_selected + " " + types[font_type_selected] +" " + font_size_selected, x, y);
     }
 }
